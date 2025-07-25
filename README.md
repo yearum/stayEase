@@ -21,23 +21,37 @@
 
 ---
 
-## 🏨 Hotel Booking App 
+## 🏨 Hotel Booking App
 
-A complete Laravel-based **hotel booking web app** inspired by Agoda. This project allows users to search for hotels based on location and date, view hotel details, photos, facilities, and make bookings — just like real-world travel platforms.
+A complete Laravel-based hotel booking web app inspired by Agoda. Users can search hotels, view details, and book rooms easily.
 
 ---
 
 ## ✨ Features
 
-- 🔍 Hotel search by location, check-in/out date, and number of guests
-- 🏨 Hotel listing with rating, description, and facilities
-- 🛏️ Room types and availability
+- 🔍 Search hotels by location and date
+- 🛏️ Room availability and types
 - 📸 Hotel photo gallery
-- 💳 Booking flow with dummy payment (QRIS, Transfer, COD)
-- ✍️ Hotel reviews by users
-- 🧑‍💻 Admin panel (CRUD: hotel, rooms, photos, facilities)
-- 📄 Generate invoice PDF after booking
-- 🎨 Responsive UI using Bootstrap
+- 💳 Booking with dummy payment (QRIS, Transfer, COD)
+- 📝 Review system
+- 📄 Invoice PDF generation
+- ⚙️ Admin dashboard for CRUD management
+
+---
+
+## 📸 Screenshots
+
+### 🏨 Hotel Listing Page
+![Hotel Listing](<img width="1295" height="641" alt="Screenshot (644)" src="https://github.com/user-attachments/assets/aca22cfa-cc92-47ce-93da-fa6cfd8f6e65" />
+)
+
+### 🛏️ Room Detail Page
+![Room Detail](<img width="1277" height="641" alt="Screenshot (645)" src="https://github.com/user-attachments/assets/1e6bbc4b-7d98-481a-87c7-58cb9664cfe1" />
+)
+
+### 💳 Booking 
+![Booking Success](<img width="1191" height="487" alt="Screenshot (646)" src="https://github.com/user-attachments/assets/106f2efd-5c0b-4e9d-ad41-4ad9fd49f485" />
+)
 
 ---
 
@@ -46,13 +60,12 @@ A complete Laravel-based **hotel booking web app** inspired by Agoda. This proje
 - Laravel 10
 - PHP 8.2+
 - MySQL / MariaDB
-- Blade Template Engine
-- Bootstrap 5 (via CDN)
+- Blade + Bootstrap 5
 - DomPDF for PDF generation
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Installation
 
 ```bash
 git clone https://github.com/your-username/hotel-booking-laravel.git
@@ -61,6 +74,5 @@ cd hotel-booking-laravel
 cp .env.example .env
 composer install
 php artisan key:generate
-
 php artisan migrate --seed
 php artisan serve
