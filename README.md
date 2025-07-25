@@ -42,15 +42,13 @@ A complete Laravel-based hotel booking web app inspired by Agoda. Users can sear
 ## 📸 Screenshots
 
 ### 🏨 Hotel Listing Page
-![Hotel Listing](<img width="1295" height="641" alt="Screenshot (644)" src="https://github.com/user-attachments/assets/aca22cfa-cc92-47ce-93da-fa6cfd8f6e65" />
-)
+![Hotel Listing](screenshots/Screenshot%20(644).png)
 
 ### 🛏️ Room Detail Page
-![Room Detail](<img width="1277" height="641" alt="Screenshot (645)" src="https://github.com/user-attachments/assets/1e6bbc4b-7d98-481a-87c7-58cb9664cfe1" />
-)
+![Room Detail](screenshots/Screenshot%20(645).png)
 
-### 💳 Booking 
-![Booking Success](<img width="1191" height="487" alt="Screenshot (646)" src="https://github.com/user-attachments/assets/106f2efd-5c0b-4e9d-ad41-4ad9fd49f485" />
+### ✅ Booking Confirmation
+![Booking Success](screenshots/Screenshot%20(646).png)
 )
 
 ---
