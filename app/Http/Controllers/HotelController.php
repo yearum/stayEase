@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Hotel;
+use App\Models\Room;
 
 class HotelController extends Controller
 {
     // Menampilkan semua hotel
     public function index()
     {
-        $hotels = Hotel::all(); // Ambil semua data hotel
+        $hotels = Hotel::all();
         return view('hotels.index', compact('hotels'));
     }
 
@@ -18,7 +19,15 @@ class HotelController extends Controller
     public function show($id)
     {
         $hotel = Hotel::with('rooms')->findOrFail($id);
-        return view('hotels.show', compact('hotel'));
+    return view('hotels.show', compact('hotel'));
+    }
+
+    // ✅ Menampilkan form booking hotel
+    public function book($id)
+    {
+        // Ambil hotel beserta semua kamarnya
+        $hotel = Hotel::with('rooms')->findOrFail($id);
+        return view('hotels.book', compact('hotel'));
     }
 
     // Menampilkan halaman foto hotel
@@ -30,7 +39,7 @@ class HotelController extends Controller
     // Proses unggah foto hotel
     public function uploadPhoto(Request $request, $id)
     {
-        // proses unggah foto
+        // implementasi unggah foto nanti di sini
     }
 
     // Menampilkan halaman fasilitas hotel
@@ -42,7 +51,7 @@ class HotelController extends Controller
     // Proses update fasilitas hotel
     public function updateFacilities(Request $request, $id)
     {
-        // proses update fasilitas
+        // implementasi update fasilitas
     }
 
     // Menampilkan halaman deskripsi hotel
@@ -54,10 +63,10 @@ class HotelController extends Controller
     // Proses update deskripsi hotel
     public function updateDescription(Request $request, $id)
     {
-        // proses update deskripsi
+        // implementasi update deskripsi
     }
 
-    // ✅ Tambahan: Proses pencarian hotel
+    // Proses pencarian hotel berdasarkan tujuan dan tanggal
     public function search(Request $request)
     {
         $request->validate([
@@ -68,7 +77,6 @@ class HotelController extends Controller
         ]);
 
         $hotels = Hotel::where('location', 'like', '%' . $request->destination . '%')->get();
-
         return view('hotels.index', compact('hotels'));
     }
 }

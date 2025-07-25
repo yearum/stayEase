@@ -8,17 +8,26 @@ use Illuminate\Database\Eloquent\Model;
 class Room extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'hotel_id',
-        'room_type',
-        'price',
-        'description',
-        'capacity',
-        'image'
+        'hotel_id', 'room_type', 'type', 'capacity', 'price', 'name'
     ];
 
     public function hotel()
     {
         return $this->belongsTo(Hotel::class);
+    }
+
+    // Contoh struktur data room
+    // Jika kamu ingin menambahkan default atau dummy dalam kode untuk testing:
+    public static function exampleRoom()
+    {
+        $room = new Room();
+        $room->type = 'reguler'; // atau bisa juga 'vip'
+        $room->room_type = 'Standard';
+        $room->price = 500000;
+        $room->capacity = 2;
+        $room->description = 'Kamar nyaman dengan fasilitas lengkap';
+        return $room;
     }
 }

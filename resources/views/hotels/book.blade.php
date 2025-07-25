@@ -1,21 +1,18 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Form Pemesanan Hotel</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body style="background: #f8f9fa;">
 <div class="container mt-5">
-    <div class="card shadow-lg p-4">
+    <div class="card shadow p-4">
         <h2 class="text-center text-primary mb-4">Form Pemesanan Hotel</h2>
 
-        <!-- Pesan Sukses -->
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-        <!-- Validasi Error -->
         @if($errors->any())
             <div class="alert alert-danger">
                 <strong>Terjadi kesalahan!</strong>
@@ -27,7 +24,6 @@
             </div>
         @endif
 
-        <!-- Form Booking -->
         <form method="POST" action="{{ route('bookings.store', $hotel->id) }}">
             @csrf
 
@@ -59,7 +55,7 @@
                 <input type="date" name="checkout" id="checkout" class="form-control" required>
             </div>
 
-            <!-- Tombol Submit -->
+            <!-- Tombol -->
             <div class="d-grid">
                 <button type="submit" class="btn btn-primary">Pesan Sekarang</button>
             </div>
