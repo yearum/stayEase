@@ -3,17 +3,38 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Booking;
 
 class PaymentController extends Controller
 {
-   public function pay($bookingId)
-{
-    $booking = Booking::where('id', $bookingId)
-                ->where('user_id', auth()->id())
-                ->firstOrFail();
+    /**
+     * Tampilkan halaman pemilihan metode pembayaran.
+     */
+    public function chooseMethod(Booking $booking)
+    {
+        // Validasi user pemilik booking
+        if ($booking->user_id !== auth()->id()) {
+            abort(403, 'Akses ditolak.');
+        }
 
-    $booking->update(['status' => 'paid']);
+        return view('bookings.payment-method', compact('booking'));
+    }
 
-    return redirect()->route('bookings.show', $booking->id)->with('success', 'Pembayaran berhasil!');
+    /**
+     * Proses pembayaran booking.
+     */
+    public function pay(Request $request, Booking $booking)
+    {
+        if ($booking->user_id !== auth()->id()) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $booking->status = 'paid';
+        $booking->payment_method = $request->payment_method;
+        $booking->save();
+
+        return redirect()->route('bookings.index')->with('success', 'Pembayaran berhasil!');
+    }
 }
-}
+
+

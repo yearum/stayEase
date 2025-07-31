@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Review;
+use App\Models\Hotel;
+
+
 
 class ReviewController extends Controller
 {
@@ -33,7 +37,7 @@ class ReviewController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $hotel = null)
+    public function store(Request $request,  Hotel $hotel )
     {
          $request->validate([
         'rating' => 'required|integer|min:1|max:5',
@@ -42,7 +46,7 @@ class ReviewController extends Controller
 
     Review::create([
         'user_id' => auth()->id(),
-        'hotel_id' => $hotelId,
+        'hotel_id' =>  $hotel->id,
         'rating' => $request->rating,
         'comment' => $request->comment,
     ]);

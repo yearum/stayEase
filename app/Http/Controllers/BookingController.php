@@ -14,8 +14,12 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::with('room.hotel')->where('user_id', auth()->id())->get();
-        return view('bookings.index', compact('bookings'));
+       $bookings = Booking::with('room.hotel')
+                ->where('user_id', auth()->id())
+                ->latest()
+                ->get();
+
+    return view('bookings.index', compact('bookings'));
     }
 
     /**
@@ -30,7 +34,7 @@ class BookingController extends Controller
     /**
      * Menyimpan data booking baru.
      */
-    public function store(Request $request, $hotelId)
+    public function store(Request $request)
     {
         $request->validate([
             'room_id' => 'required|exists:rooms,id',
@@ -50,6 +54,8 @@ class BookingController extends Controller
             'checkout' => $request->checkout,
             'total' => $total,
             'status' => 'pending',
+            'payment_method' => $request->payment_method
+
         ]);
 
         return redirect()->route('bookings.show', $booking->id)->with('success', 'Booking berhasil dibuat!');
@@ -98,6 +104,7 @@ class BookingController extends Controller
         $request->validate([
             'checkin' => 'required|date|after_or_equal:today',
             'checkout' => 'required|date|after:checkin',
+            'payment_method' => 'required|in:transfer,cod',
         ]);
 
         $days = now()->parse($request->checkin)->diffInDays(now()->parse($request->checkout));

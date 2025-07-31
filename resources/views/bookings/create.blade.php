@@ -59,6 +59,23 @@
                 <input type="date" name="checkout" id="checkout" class="form-control" required>
             </div>
 
+            <!-- Metode Pembayaran -->
+            <div class="mb-3">
+                <label for="payment_method" class="form-label">Metode Pembayaran</label>
+                <select name="payment_method" class="form-select" onchange="toggleRekening(this.value)" required>
+                    <option value="">-- Pilih --</option>
+                    <option value="transfer">Transfer Bank</option>
+                    <option value="cod">Bayar di Tempat (COD)</option>
+                </select>
+            </div>
+
+            <!-- Info Transfer -->
+            <div class="alert alert-info d-none" id="rekening-info">
+                Silakan transfer ke rekening berikut:<br>
+                <strong>BCA 6975701828</strong><br>
+                Atas Nama: <strong>[Nama Pemilik]</strong>
+            </div>
+
             <!-- Tombol Submit -->
             <div class="d-grid">
                 <button type="submit" class="btn btn-primary">Pesan Sekarang</button>
@@ -66,5 +83,16 @@
         </form>
     </div>
 </div>
+
+<script>
+    function toggleRekening(value) {
+        const info = document.getElementById('rekening-info');
+        if (value === 'transfer') {
+            info.classList.remove('d-none');
+        } else {
+            info.classList.add('d-none');
+        }
+    }
+</script>
 </body>
 </html>
