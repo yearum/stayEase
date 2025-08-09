@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StayEase - Penginapan Mudah</title>
+    <title>Samudra Property - Penginapan Murah</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         html {
@@ -56,7 +56,7 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="#">StayEase</a>
+        <a class="navbar-brand fw-bold" href="#">Samudra Property</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -98,15 +98,15 @@
 <!-- Hero Section -->
 <div class="hero text-center" style="margin-top: 75px;">
     <div class="container">
-        <h1 class="display-4 fw-bold">Selamat Datang di StayEase</h1>
-        <p class="lead">Temukan dan pesan penginapan favoritmu dengan mudah.</p>
+        <h1 class="display-4 fw-bold">Selamat Datang di Samudra Property</h1>
+        <p class="lead">Temukan dan pesan penginapan favoritmu dengan harga terjangkau.</p>
         <a href="{{ route('hotels.index') }}" class="btn btn-lg btn-primary mt-3">Cari Hotel</a>
     </div>
 </div>
 
 <!-- Section: Hotel -->
 <section id="hotel" class="container py-5">
-    <h2 class="text-center mb-4">Hotel Berkualitas</h2>
+    <h2 class="text-center mb-4">Hotel terjangkau</h2>
     <div class="row text-center">
         <div class="col-md-4 mb-4">
             <div class="card card-hover p-4 border-0 shadow-sm">
@@ -133,19 +133,19 @@
 <section id="tentang" class="bg-light py-5">
     <div class="container">
         <h2 class="text-center mb-4">Tentang Kami</h2>
-        <p class="text-center">StayEase adalah platform terpercaya untuk mencari dan memesan hotel dengan mudah. Kami hadir untuk membuat perjalananmu lebih nyaman dan efisien.</p>
+        <p class="text-center">Samudra Property adalah platform terpercaya untuk mencari dan memesan hotel dengan mudah. Kami hadir untuk membuat perjalananmu lebih nyaman dan efisien.</p>
     </div>
 </section>
 
 <!-- Section: Kontak -->
 <section id="kontak" class="container py-5">
     <h2 class="text-center mb-4">Kontak Kami</h2>
-    <p class="text-center">Email: support@stayease.com | Telepon: +62 812 3456 7890</p>
+    <p class="text-center">Email: support@stayease.com | Telepon: +62 81299744583</p>
 </section>
 
 <!-- Footer -->
 <footer class="bg-dark text-white py-4 text-center">
-    <p class="mb-0">StayEase &copy; {{ date('Y') }} - All Rights Reserved</p>
+    <p class="mb-0">Samudra Property &copy; {{ date('Y') }} - All Rights Reserved</p>
 </footer>
 
 <!-- Bootstrap JS -->

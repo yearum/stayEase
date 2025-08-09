@@ -61,9 +61,9 @@ class BookingController extends Controller
             'user_id' => auth()->id(),
             'room_id' => $request->room_id,
             'duration_type' => $request->duration_type,
-            'check_in' => $checkIn,
-            'check_out' => $checkOut,
-            'total_price' => $this->calculatePrice($request->room_id, $request->duration_type),
+            'checkin' => $checkIn,
+            'checkout' => $checkOut,
+            'total' => $this->calculatePrice($request->room_id, $request->duration_type),
             'status' => 'pending',
             'payment_method' => $request->payment_method
         ]);

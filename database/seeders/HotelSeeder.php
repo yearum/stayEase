@@ -2,32 +2,25 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Hotel;
 
 class HotelSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run(): void
+    public function run()
     {
-        Hotel::factory()
-            ->count(10)
-            ->create()
-            ->each(function ($hotel) {
-                // Tambahkan 3-5 room per hotel
-                Room::factory()->count(rand(3, 5))->create([
-                    'hotel_id' => $hotel->id,
-                ]);
+        Hotel::create([
+            'name' => 'Ambarukmo',
+            'location' => 'Yogyakarta',
+            'description' => 'Hotel mewah di pusat kota Yogyakarta.',
+            
+        ]);
 
-                // Tambahkan 2-4 review per hotel
-                Review::factory()->count(rand(2, 4))->create([
-                    'hotel_id' => $hotel->id,
-                ]);
-            });
+        Hotel::create([
+            'name' => 'Apartemen Studen Kastel',
+            'location' => 'Yogyakarta',
+            'description' => 'Apartemen nyaman untuk mahasiswa.',
+            
+        ]);
     }
 }
-

@@ -4,20 +4,50 @@
     <meta charset="UTF-8">
     <title>Detail Hotel - {{ $hotel->name }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Optional Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        .carousel-item img {
+            height: 350px;
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
 <div class="container py-5">
     <div class="row g-4">
-        <!-- Gambar Hotel -->
+        <!-- Gambar Hotel (Carousel) -->
         <div class="col-md-6">
-            <img src="{{ asset($hotel->image ?? 'images/default-hotel.jpg') }}" class="img-fluid rounded shadow-sm" alt="{{ $hotel->name }}">
+            @if (!empty($hotel->images))
+                <div id="hotelCarousel" class="carousel slide shadow-sm rounded" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @foreach ($hotel->images as $index => $image)
+                            <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                <img src="{{ asset($image) }}" class="d-block w-100 rounded" alt="Gambar Hotel {{ $index + 1 }}">
+                            </div>
+                        @endforeach
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#hotelCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#hotelCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+            @else
+                <img src="{{ asset($hotel->image ?? 'images/default-hotel.jpg') }}" class="img-fluid rounded shadow-sm" alt="{{ $hotel->name }}">
+            @endif
         </div>
 
         <!-- Info Hotel -->
         <div class="col-md-6">
             <h2 class="mb-2">{{ $hotel->name }}</h2>
-            <p class="text-muted">{{ $hotel->location }}</p>
+            <p class="text-muted"><i class="bi bi-geo-alt-fill"></i> {{ $hotel->location }}</p>
             <p><strong>Rating:</strong> {{ $hotel->rating ?? '4.5' }} ⭐</p>
             <p>{{ $hotel->description }}</p>
             <a href="{{ route('hotels.book', $hotel->id) }}" class="btn btn-success mt-2">Pesan Sekarang</a>
@@ -78,5 +108,8 @@
         </div>
     @endauth
 </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

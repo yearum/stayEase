@@ -19,13 +19,26 @@ class HotelController extends Controller
     public function show($id)
     {
         $hotel = Hotel::with('rooms')->findOrFail($id);
-    return view('hotels.show', compact('hotel'));
+
+        // Tambahkan gambar tambahan berdasarkan nama hotel
+        $hotel->images = match ($hotel->name) {
+            'Ambarukmo' => [
+                'images/amplas/Gambar WhatsApp 2025-08-09 pukul 14.11.03_cd6e0a70.jpg',
+                'images/amplas/Gambar WhatsApp 2025-08-09 pukul 14.11.03_4dcc793c.jpg',
+            ],
+            'Apartemen Studen Kastel' => [
+                'images/apart/Gambar WhatsApp 2025-08-09 pukul 14.07.33_91adaad1.jpg',
+                'images/apart/Gambar WhatsApp 2025-08-09 pukul 14.07.34_40401799.jpg',
+            ],
+            default => [$hotel->image],
+        };
+
+        return view('hotels.show', compact('hotel'));
     }
 
     // ✅ Menampilkan form booking hotel
     public function book($id)
     {
-        // Ambil hotel beserta semua kamarnya
         $hotel = Hotel::with('rooms')->findOrFail($id);
         return view('hotels.book', compact('hotel'));
     }

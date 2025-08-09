@@ -1,5 +1,0 @@
-Portofolio Web Reservasi StayEase by yerum
-
-Deskripsi:
-- Fitur pencarian hotel, booking, pembayaran
-- Admin kelola data kamar dan laporan keuangan
