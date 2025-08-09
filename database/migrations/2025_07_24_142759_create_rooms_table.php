@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('rooms', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('hotel_id')->constrained()->onDelete('cascade'); // foreign key aman
-        $table->string('name');
-        $table->integer('price');
-        $table->integer('capacity');
-        $table->boolean('available')->default(true);
-        $table->timestamps();
+        Schema::table('rooms', function (Blueprint $table) {
+    $table->decimal('price_3h', 10, 2)->nullable();
+    $table->decimal('price_6h', 10, 2)->nullable();
+    $table->decimal('price_12h', 10, 2)->nullable();
+    $table->decimal('price_transit', 10, 2)->nullable();
+    $table->decimal('price_daily', 10, 2)->nullable();
+
     });
     }
 

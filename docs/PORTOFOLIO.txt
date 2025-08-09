@@ -1,4 +1,4 @@
-Portofolio Web Reservasi StayEase by Lia
+Portofolio Web Reservasi StayEase by yerum
 
 Deskripsi:
 - Fitur pencarian hotel, booking, pembayaran

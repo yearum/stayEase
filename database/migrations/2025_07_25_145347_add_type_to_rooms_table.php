@@ -14,11 +14,18 @@ return new class extends Migration
     public function up()
     {
         Schema::table('rooms', function (Blueprint $table) {
-        $table->string('room_type')->after('hotel_id')->nullable();
-    });
-        Schema::table('rooms', function (Blueprint $table) {
-            $table->string('type')->after('room_type')->nullable(); // vip/reguler
-            $table->boolean('available')->default(true)->after('description');
+            // Tambahkan kolom hanya jika belum ada
+            if (!Schema::hasColumn('rooms', 'room_type')) {
+                $table->string('room_type')->after('hotel_id')->nullable();
+            }
+
+            if (!Schema::hasColumn('rooms', 'type')) {
+                $table->string('type')->after('room_type')->nullable(); // vip/reguler
+            }
+
+            if (!Schema::hasColumn('rooms', 'available')) {
+                $table->boolean('available')->default(true)->after('description');
+            }
         });
     }
 
@@ -29,8 +36,18 @@ return new class extends Migration
      */
     public function down()
     {
-         Schema::table('rooms', function (Blueprint $table) {
-        $table->dropColumn('room_type');
-    });
+        Schema::table('rooms', function (Blueprint $table) {
+            if (Schema::hasColumn('rooms', 'room_type')) {
+                $table->dropColumn('room_type');
+            }
+
+            if (Schema::hasColumn('rooms', 'type')) {
+                $table->dropColumn('type');
+            }
+
+            if (Schema::hasColumn('rooms', 'available')) {
+                $table->dropColumn('available');
+            }
+        });
     }
 };

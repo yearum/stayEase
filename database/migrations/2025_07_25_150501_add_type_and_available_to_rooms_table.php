@@ -14,8 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::table('rooms', function (Blueprint $table) {
-        $table->string('room_type')->after('hotel_id')->nullable();
-    });
+            if (!Schema::hasColumn('rooms', 'room_type')) {
+                $table->string('room_type')->nullable()->after('hotel_id');
+            }
+
+            if (!Schema::hasColumn('rooms', 'available')) {
+                $table->boolean('available')->default(true)->after('room_type');
+            }
+        });
     }
 
     /**
@@ -25,8 +31,14 @@ return new class extends Migration
      */
     public function down()
     {
-          Schema::table('rooms', function (Blueprint $table) {
-        $table->dropColumn('room_type');
-    });
+        Schema::table('rooms', function (Blueprint $table) {
+            if (Schema::hasColumn('rooms', 'room_type')) {
+                $table->dropColumn('room_type');
+            }
+
+            if (Schema::hasColumn('rooms', 'available')) {
+                $table->dropColumn('available');
+            }
+        });
     }
 };
