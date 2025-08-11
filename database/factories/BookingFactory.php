@@ -2,22 +2,23 @@
 
 namespace Database\Factories;
 
+use App\Models\Booking;
+use App\Models\User;
+use App\Models\Room;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Booking>
- */
 class BookingFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition()
+    protected $model = Booking::class;
+
+    public function definition(): array
     {
         return [
-            //
+            'user_id' => User::inRandomOrder()->first()?->id,
+            'room_id' => Room::inRandomOrder()->first()?->id,
+            'check_in' => now()->addDays(rand(1, 5)),
+            'check_out' => now()->addDays(rand(6, 10)),
+            'status' => 'confirmed',
         ];
     }
 }

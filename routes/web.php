@@ -85,9 +85,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile/bookings', [ProfileController::class, 'bookings'])->name('profile.bookings');
     Route::get('/profile/reviews', [ProfileController::class, 'reviews'])->name('profile.reviews');
 
+    // ✅ Tambahan route untuk booking berdasarkan room dan durasi
+    Route::get('/bookings/create/{room}/{duration}', [BookingController::class, 'create'])->name('book.room');
+
+    // Booking dan pembayaran
     Route::resource('bookings', BookingController::class);
-    Route::get('/bookings/{booking}/payment', [PaymentController::class, 'chooseMethod'])->name('bookings.payment');
     Route::post('/bookings/{booking}/pay', [PaymentController::class, 'pay'])->name('bookings.pay');
+
+    // Review
     Route::resource('reviews', UserReviewController::class)->only(['store', 'destroy']);
 });
 
@@ -101,10 +106,10 @@ Route::prefix('admin')->group(function () {
 
     Route::middleware(['admin'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
         // Hotel dan Room Management
         Route::get('hotels/{hotel}/rooms', [AdminHotelController::class, 'manageRooms'])->name('admin.hotels.rooms');
         Route::patch('/admin/rooms/{room}/toggle', [AdminHotelController::class, 'toggleRoomAvailability'])->name('admin.rooms.toggle');
-
 
         // Fitur lainnya bisa ditambahkan di sini
         Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');

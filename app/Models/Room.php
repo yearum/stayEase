@@ -30,4 +30,8 @@ class Room extends Model
         $room->description = 'Kamar nyaman dengan fasilitas lengkap';
         return $room;
     }
+    protected $casts = [
+    'is_available' => 'boolean',
+];
+
 }

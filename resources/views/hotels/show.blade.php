@@ -4,13 +4,8 @@
     <meta charset="UTF-8">
     <title>Detail Hotel - {{ $hotel->name }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Optional Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
     <style>
         .carousel-item img {
             height: 350px;
@@ -21,14 +16,18 @@
 <body>
 <div class="container py-5">
     <div class="row g-4">
-        <!-- Gambar Hotel (Carousel) -->
+        <!-- Gambar Hotel -->
         <div class="col-md-6">
-            @if (!empty($hotel->images))
+            @php
+                $images = json_decode($hotel->image, true);
+            @endphp
+
+            @if (!empty($images))
                 <div id="hotelCarousel" class="carousel slide shadow-sm rounded" data-bs-ride="carousel">
                     <div class="carousel-inner">
-                        @foreach ($hotel->images as $index => $image)
+                        @foreach ($images as $index => $img)
                             <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                <img src="{{ asset($image) }}" class="d-block w-100 rounded" alt="Gambar Hotel {{ $index + 1 }}">
+                                <img src="{{ asset($img) }}" class="d-block w-100 rounded" alt="Gambar Hotel {{ $index + 1 }}">
                             </div>
                         @endforeach
                     </div>
@@ -40,7 +39,7 @@
                     </button>
                 </div>
             @else
-                <img src="{{ asset($hotel->image ?? 'images/default-hotel.jpg') }}" class="img-fluid rounded shadow-sm" alt="{{ $hotel->name }}">
+                <img src="{{ asset('images/default-hotel.jpg') }}" class="img-fluid rounded shadow-sm" alt="{{ $hotel->name }}">
             @endif
         </div>
 
@@ -50,7 +49,6 @@
             <p class="text-muted"><i class="bi bi-geo-alt-fill"></i> {{ $hotel->location }}</p>
             <p><strong>Rating:</strong> {{ $hotel->rating ?? '4.5' }} ⭐</p>
             <p>{{ $hotel->description }}</p>
-            <a href="{{ route('hotels.book', $hotel->id) }}" class="btn btn-success mt-2">Pesan Sekarang</a>
         </div>
     </div>
 
@@ -62,8 +60,9 @@
                 <tr>
                     <th>Nama Kamar</th>
                     <th>Kapasitas</th>
-                    <th>Harga per Malam</th>
+                    <th>Harga Short Time</th>
                     <th>Status</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -71,45 +70,49 @@
                     <tr>
                         <td>{{ $room->name }}</td>
                         <td>{{ $room->capacity }} Orang</td>
-                        <td>Rp{{ number_format($room->price, 0, ',', '.') }}</td>
                         <td>
-                            @if($room->available)
+                            <ul class="list-unstyled mb-0">
+                                <li>3 Jam: Rp{{ number_format($room->price_3h, 0, ',', '.') }}</li>
+                                <li>6 Jam: Rp{{ number_format($room->price_6h, 0, ',', '.') }}</li>
+                                <li>12 Jam: Rp{{ number_format($room->price_12h, 0, ',', '.') }}</li>
+                            </ul>
+                        </td>
+                        <td>
+                            @if($room->is_available)
                                 <span class="badge bg-success">Tersedia</span>
                             @else
                                 <span class="badge bg-danger">Penuh</span>
                             @endif
                         </td>
+                        <td>
+                            @if($room->is_available)
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Pesan Sekarang
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{{ route('book.room', ['room' => $room->id, 'duration' => 'short_3h']) }}">3 Jam</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('book.room', ['room' => $room->id, 'duration' => 'short_6h']) }}">6 Jam</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('book.room', ['room' => $room->id, 'duration' => 'short_12h']) }}">12 Jam</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('book.room', ['room' => $room->id, 'duration' => 'transit']) }}">Transit</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('book.room', ['room' => $room->id, 'duration' => 'daily']) }}">Daily</a></li>
+                                    </ul>
+                                </div>
+                            @else
+                                <button class="btn btn-secondary btn-sm" disabled>Penuh</button>
+                            @endif
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center text-muted">Belum ada data kamar.</td>
+                        <td colspan="5" class="text-center text-muted">Belum ada data kamar.</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
-
-    <!-- Form Ulasan -->
-    @auth
-        <div class="mt-5">
-            <h5>Tulis Ulasan</h5>
-            <form action="{{ route('hotels.reviews.store', $hotel->id) }}" method="POST">
-                @csrf
-                <div class="mb-3">
-                    <label for="rating" class="form-label">Rating (1-5):</label>
-                    <input type="number" name="rating" id="rating" min="1" max="5" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="comment" class="form-label">Komentar:</label>
-                    <textarea name="comment" id="comment" class="form-control" rows="4" required></textarea>
-                </div>
-                <button class="btn btn-primary">Kirim Ulasan</button>
-            </form>
-        </div>
-    @endauth
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

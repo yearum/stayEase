@@ -8,7 +8,7 @@
 <body class="bg-light">
 
 <div class="container mt-5">
-    <h2 class="mb-4">Detail Booking</h2>
+    <h2 class="mb-4 text-primary">Detail Booking</h2>
 
     @if (session('success'))
         <div class="alert alert-success">
@@ -22,22 +22,33 @@
                 {{ $booking->room->name }} - {{ $booking->room->hotel->name }}
             </h5>
             <p class="card-text"><strong>Alamat Hotel:</strong> {{ $booking->room->hotel->address }}</p>
+            <p class="card-text"><strong>Durasi:</strong> {{ $booking->formatted_duration }}</p>
+            <p class="card-text"><strong>Total Terformat:</strong> {{ $booking->formatted_total }}</p>
+            <p class="card-text"><strong>Check-in Detail:</strong> {{ $booking->checkin->format('d M Y H:i') }}</p>
             <p class="card-text"><strong>Tanggal Check-in:</strong> {{ \Carbon\Carbon::parse($booking->checkin)->format('d M Y') }}</p>
             <p class="card-text"><strong>Tanggal Check-out:</strong> {{ \Carbon\Carbon::parse($booking->checkout)->format('d M Y') }}</p>
             <p class="card-text"><strong>Total:</strong> Rp{{ number_format($booking->total, 0, ',', '.') }}</p>
             <p class="card-text"><strong>Status:</strong> 
-                <span class="badge bg-warning text-dark">{{ ucfirst($booking->status) }}</span>
+                <span class="badge {{ strtolower($booking->status) === 'success' ? 'bg-success' : 'bg-warning text-dark' }}">
+                    {{ strtolower($booking->status) === 'success' ? '✔️' : '✔️' }} {{ ucfirst($booking->status) }}
+                </span>
+            </p>
+            <p class="card-text"><strong>Metode Pembayaran:</strong> 
+                {{ $booking->payment_method === 'transfer' ? 'Transfer Bank' : 'Bayar di Tempat (COD)' }}
             </p>
         </div>
     </div>
 
-    @if ($booking->status === 'pending')
-        <div class="mt-4">
-            <a href="{{ route('bookings.payment', $booking) }}" class="btn btn-primary">Lanjut ke Pembayaran</a>
+    @if ($booking->payment_method === 'transfer')
+        <div class="alert alert-info mt-4">
+            <strong>Silakan transfer ke rekening berikut:</strong><br>
+            <span>6975701828 - BCA</span><br>
+            <span>Atas Nama: <strong>Galang Samudra</strong></span>
+            <p class="text-muted mt-2" style="font-size: 0.875em;">
+                *Sertakan bukti pembayaran ke resepsionis saat check-in.
+            </p>
         </div>
     @endif
-
-    <a href="{{ route('dashboard') }}" class="btn btn-secondary mt-3">Kembali ke Dashboard</a>
 </div>
 
 </body>

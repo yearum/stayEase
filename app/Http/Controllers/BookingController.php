@@ -20,26 +20,45 @@ class BookingController extends Controller
         return view('bookings.index', compact('bookings'));
     }
 
-    public function create($hotelId)
+    /**
+     * Menampilkan form booking berdasarkan pilihan durasi dari dropdown
+     */
+    public function create(Room $room, $duration)
     {
-        $hotel = Hotel::with('rooms')->findOrFail($hotelId);
-        return view('bookings.create', compact('hotel'));
+        $validDurations = ['short_3h', 'short_6h', 'short_12h', 'transit', 'daily'];
+        if (!in_array($duration, $validDurations)) {
+            abort(404);
+        }
+
+        $price = $this->calculatePrice($room->id, $duration);
+
+        return view('bookings.create', compact('room', 'duration', 'price'));
     }
 
     /**
-     * Menyimpan data booking baru dengan pilihan short time, transit, atau harian
+     * Menyimpan data booking baru
      */
     public function store(Request $request)
     {
         $request->validate([
             'room_id' => 'required|exists:rooms,id',
-            'duration_type' => 'required|in:short_3h,short_6h,short_12h,transit,daily',
-            'payment_method' => 'nullable|string'
+            'duration' => 'required|in:short_3h,short_6h,short_12h,transit,daily',
+            'price' => 'required|numeric|min:1',
+            'payment_method' => 'required|in:transfer,cod',
         ]);
+
+        $validDurations = ['short_3h', 'short_6h', 'short_12h', 'transit', 'daily'];
+        if (!in_array($request->duration, $validDurations)) {
+            abort(400, 'Durasi tidak valid');
+        }
+
+        if ($request->price <= 0) {
+            return back()->withErrors(['price' => 'Harga tidak valid atau belum tersedia']);
+        }
 
         $checkIn = Carbon::now();
 
-        switch ($request->duration_type) {
+        switch ($request->duration) {
             case 'short_3h':
                 $checkOut = $checkIn->copy()->addHours(3);
                 break;
@@ -60,36 +79,21 @@ class BookingController extends Controller
         $booking = Booking::create([
             'user_id' => auth()->id(),
             'room_id' => $request->room_id,
-            'duration_type' => $request->duration_type,
+            'duration_type' => $request->duration,
             'checkin' => $checkIn,
             'checkout' => $checkOut,
-            'total' => $this->calculatePrice($request->room_id, $request->duration_type),
-            'status' => 'pending',
-            'payment_method' => $request->payment_method
+            'total' => $request->price,
+            'status' => 'sucsess',
+            'payment_method' => $request->payment_method,
         ]);
 
         return redirect()->route('bookings.show', $booking->id)
             ->with('success', 'Booking berhasil dibuat!');
     }
 
-    private function calculatePrice($roomId, $durationType)
-    {
-        $room = Room::findOrFail($roomId);
-
-        switch ($durationType) {
-            case 'short_3h':
-                return $room->price_3h ?? ($room->price_daily / 8);
-            case 'short_6h':
-                return $room->price_6h ?? ($room->price_daily / 4);
-            case 'short_12h':
-                return $room->price_12h ?? ($room->price_daily / 2);
-            case 'transit':
-                return $room->price_transit ?? ($room->price_daily / 3);
-            case 'daily':
-                return $room->price_daily;
-        }
-    }
-
+    /**
+     * Menampilkan detail booking
+     */
     public function show($id)
     {
         $booking = Booking::with('room.hotel')->findOrFail($id);
@@ -101,23 +105,37 @@ class BookingController extends Controller
         return view('bookings.show', compact('booking'));
     }
 
+    /**
+     * Menampilkan form edit booking
+     */
     public function edit($id)
     {
-        $booking = Booking::findOrFail($id);
+        $booking = Booking::with('room.hotel')->findOrFail($id);
 
         if ($booking->user_id !== auth()->id()) {
             abort(403);
         }
 
+        if ($booking->status !== 'pending') {
+            return back()->with('error', 'Booking tidak bisa diubah karena sudah diproses.');
+        }
+
         return view('bookings.edit', compact('booking'));
     }
 
+    /**
+     * Memperbarui data booking
+     */
     public function update(Request $request, $id)
     {
-        $booking = Booking::findOrFail($id);
+        $booking = Booking::with('room.hotel')->findOrFail($id);
 
         if ($booking->user_id !== auth()->id()) {
             abort(403);
+        }
+
+        if ($booking->status !== 'pending') {
+            return back()->with('error', 'Booking tidak bisa diubah karena sudah diproses.');
         }
 
         $request->validate([
@@ -133,22 +151,47 @@ class BookingController extends Controller
             'checkin' => $request->checkin,
             'checkout' => $request->checkout,
             'total' => $total,
+            'payment_method' => $request->payment_method,
         ]);
 
         return redirect()->route('bookings.show', $booking->id)
             ->with('success', 'Booking berhasil diperbarui!');
     }
 
+    /**
+     * Menghapus booking
+     */
     public function destroy($id)
     {
-        $booking = Booking::findOrFail($id);
+        $booking = Booking::with('room.hotel')->findOrFail($id);
 
         if ($booking->user_id !== auth()->id()) {
             abort(403);
         }
 
+        if ($booking->status !== 'pending') {
+            return back()->with('error', 'Booking tidak bisa dibatalkan karena sudah diproses.');
+        }
+
         $booking->delete();
 
         return redirect()->route('bookings.index')->with('success', 'Booking berhasil dibatalkan!');
+    }
+
+    /**
+     * Menghitung harga berdasarkan durasi
+     */
+    private function calculatePrice($roomId, $durationType)
+    {
+        $room = Room::findOrFail($roomId);
+
+        return match ($durationType) {
+            'short_3h' => $room->price_3h ?? ($room->price_daily / 8),
+            'short_6h' => $room->price_6h ?? ($room->price_daily / 4),
+            'short_12h' => $room->price_12h ?? ($room->price_daily / 2),
+            'transit' => $room->price_transit ?? ($room->price_daily / 3),
+            'daily' => $room->price_daily,
+            default => 0,
+        };
     }
 }

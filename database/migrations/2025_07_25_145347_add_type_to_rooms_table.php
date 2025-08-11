@@ -4,37 +4,32 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+ class AddRoomTypeToRoomsTable extends Migration
+
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
-        Schema::table('rooms', function (Blueprint $table) {
-            // Tambahkan kolom hanya jika belum ada
-            if (!Schema::hasColumn('rooms', 'room_type')) {
-                $table->string('room_type')->after('hotel_id')->nullable();
+        // Cek kolom di luar closure
+        $hasRoomType = Schema::hasColumn('rooms', 'room_type');
+        $hasType = Schema::hasColumn('rooms', 'type');
+        $hasAvailable = Schema::hasColumn('rooms', 'available');
+
+        Schema::table('rooms', function (Blueprint $table) use ($hasRoomType, $hasType, $hasAvailable) {
+            if (!$hasRoomType) {
+                $table->string('room_type')->nullable()->after('hotel_id');
             }
 
-            if (!Schema::hasColumn('rooms', 'type')) {
-                $table->string('type')->after('room_type')->nullable(); // vip/reguler
+            if (!$hasType) {
+                $table->string('type')->nullable()->after('room_type'); // vip/reguler
             }
 
-            if (!Schema::hasColumn('rooms', 'available')) {
-                $table->boolean('available')->default(true)->after('description');
+            if (!$hasAvailable) {
+                $table->boolean('available')->default(true); // Hapus after('description')
             }
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         Schema::table('rooms', function (Blueprint $table) {
             if (Schema::hasColumn('rooms', 'room_type')) {
@@ -50,4 +45,4 @@ return new class extends Migration
             }
         });
     }
-};
+}

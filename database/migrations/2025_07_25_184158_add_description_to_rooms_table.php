@@ -6,27 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-         Schema::table('rooms', function (Blueprint $table) {
-        $table->text('description')->after('capacity')->nullable();
-    });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function up(): void
     {
         Schema::table('rooms', function (Blueprint $table) {
-        $table->dropColumn('description');
-    });
+            // Tambahkan kolom description
+            $table->text('description')->nullable();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('rooms', function (Blueprint $table) {
+            // Hapus kolom hanya jika ada
+            if (Schema::hasColumn('rooms', 'description')) {
+                $table->dropColumn('description');
+            }
+        });
     }
 };

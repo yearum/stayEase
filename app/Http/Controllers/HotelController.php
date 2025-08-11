@@ -4,82 +4,62 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Hotel;
-use App\Models\Room;
 
 class HotelController extends Controller
 {
     // Menampilkan semua hotel
     public function index()
     {
-        $hotels = Hotel::all();
+        $hotels = Hotel::with('photos')->get();
+// ← ambil gambar via relasi
         return view('hotels.index', compact('hotels'));
     }
 
     // Menampilkan detail hotel
     public function show($id)
     {
-        $hotel = Hotel::with('rooms')->findOrFail($id);
-
-        // Tambahkan gambar tambahan berdasarkan nama hotel
-        $hotel->images = match ($hotel->name) {
-            'Ambarukmo' => [
-                'images/amplas/Gambar WhatsApp 2025-08-09 pukul 14.11.03_cd6e0a70.jpg',
-                'images/amplas/Gambar WhatsApp 2025-08-09 pukul 14.11.03_4dcc793c.jpg',
-            ],
-            'Apartemen Studen Kastel' => [
-                'images/apart/Gambar WhatsApp 2025-08-09 pukul 14.07.33_91adaad1.jpg',
-                'images/apart/Gambar WhatsApp 2025-08-09 pukul 14.07.34_40401799.jpg',
-            ],
-            default => [$hotel->image],
-        };
-
+        $hotel = Hotel::with(['rooms', 'photos'])->findOrFail($id); // ← ambil rooms & photos
         return view('hotels.show', compact('hotel'));
     }
 
-    // ✅ Menampilkan form booking hotel
+    // Menampilkan form booking hotel
     public function book($id)
     {
         $hotel = Hotel::with('rooms')->findOrFail($id);
         return view('hotels.book', compact('hotel'));
     }
 
-    // Menampilkan halaman foto hotel
+    // Halaman foto hotel
     public function photos($id)
     {
         return view('hotels.photos', compact('id'));
     }
 
-    // Proses unggah foto hotel
     public function uploadPhoto(Request $request, $id)
     {
         // implementasi unggah foto nanti di sini
     }
 
-    // Menampilkan halaman fasilitas hotel
     public function facilities($id)
     {
         return view('hotels.facilities', compact('id'));
     }
 
-    // Proses update fasilitas hotel
     public function updateFacilities(Request $request, $id)
     {
         // implementasi update fasilitas
     }
 
-    // Menampilkan halaman deskripsi hotel
     public function description($id)
     {
         return view('hotels.description', compact('id'));
     }
 
-    // Proses update deskripsi hotel
     public function updateDescription(Request $request, $id)
     {
         // implementasi update deskripsi
     }
 
-    // Proses pencarian hotel berdasarkan tujuan dan tanggal
     public function search(Request $request)
     {
         $request->validate([
@@ -89,7 +69,11 @@ class HotelController extends Controller
             'guests'      => 'required|integer|min:1',
         ]);
 
-        $hotels = Hotel::where('location', 'like', '%' . $request->destination . '%')->get();
+        $hotels = Hotel::with('photos')
+            ->where('location', 'like', '%' . $request->destination . '%')
+            ->get();
+
         return view('hotels.index', compact('hotels'));
     }
 }
+

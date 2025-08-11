@@ -18,22 +18,12 @@
         <div class="row">
             @foreach ($hotels as $hotel)
                 @php
-                    $images = match ($hotel->name) {
-                        'Ambarukmo' => [
-                            'images/amplas/Gambar WhatsApp 2025-08-09 pukul 14.11.03_cd6e0a70.jpg',
-                            'images/amplas/Gambar WhatsApp 2025-08-09 pukul 14.11.03_4dcc793c.jpg',
-                        ],
-                        'Apartemen Studen Kastel' => [
-                            'images/apart/Gambar WhatsApp 2025-08-09 pukul 14.07.33_91adaad1.jpg',
-                            'images/apart/Gambar WhatsApp 2025-08-09 pukul 14.07.34_40401799.jpg',
-                        ],
-                        default => [$hotel->image ?? 'https://via.placeholder.com/400x250?text=Hotel+Image'],
-                    };
+                    $images = json_decode($hotel->image, true);
                 @endphp
 
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 shadow-sm">
-                        <img src="{{ asset($images[0]) }}" class="card-img-top" alt="{{ $hotel->name }}" style="height: 250px; object-fit: cover;">
+                        <img src="{{ asset($images[0] ?? 'images/default-hotel.jpg') }}" class="card-img-top" alt="{{ $hotel->name }}" style="height: 250px; object-fit: cover;">
                         <div class="card-body">
                             <h5 class="card-title">{{ $hotel->name }}</h5>
                             <p class="card-text text-muted">{{ $hotel->location }}</p>
